@@ -11,7 +11,7 @@ and this project adheres to
   - Fail in case there's unresolved type in definitions (ecb7a1b) by Jiri Olsa &lt;jolsa@kernel.org&gt;
     - Reverted in 2239756, waiting for a PR to fix an issue we found before re-enabling it
 
-## [0.9.0] 2019-03-16
+## [0.9.1] 2019-06-??
 
 ### TODO(mmarchini): update these before releasing next version
 
@@ -47,7 +47,7 @@ and this project adheres to
   - Add script to check kernel requirements (ac19743) by bas smit &lt;bas@baslab.org&gt;
   - Add USDT wildcard matching support (82dbe4e...3725edf,648a65a) by Dale Hamel &lt;dale.hamel@srvthe.net&gt;
   - Add support for arrays and IPv6 for the `ntop` builtin function (c9dd10f,24a463f) by Matheus Marchini &lt;mat@mmarchini.me&gt;
-  - Add 'cat' builtin (#543) (ae1cfc9,ef9baf8) by Augusto Caringi &lt;acaringi@redhat.com&gt;
+  - Add 'cat' builtin (ae1cfc9,ef9baf8) by Augusto Caringi &lt;acaringi@redhat.com&gt;
   - Add array indexing operator [] for one-dimensional, constant arrays (ec664a1) by Dale Hamel &lt;dalehamel@users.noreply.github.com&gt;
   - Allow dots to truncate fields in `printf` (0f636c9) by Brendan Gregg &lt;bgregg@netflix.com&gt;
   - Add `BPFTRACE_MAP_KEYS_MAX` environment variable, and increase default map keys limit to 4096 (fab8bf6) by Brendan Gregg &lt;bgregg@netflix.com&gt;
