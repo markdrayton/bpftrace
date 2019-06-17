@@ -30,6 +30,9 @@ and this project adheres to
   - Add basic support to enums (treat them as constants) (e4cb6ce) by Matheus Marchini &lt;mat@mmarchini.me&gt;
   - Add macro definition support (8826470,af67b56,14e892b) by Matheus Marchini &lt;mat@mmarchini.me&gt;, Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
   - Add support for arrays and IPv6 for the `ntop` builtin function (c9dd10f) by Matheus Marchini &lt;mat@mmarchini.me&gt;
+  - Allow comparison of two string variables (7c8e8ed) by williangaspar &lt;williangaspar360@gmail.com&gt;
+  - [**BREAKING CHANGE**] Ban kprobes that cause CPU deadlocks (40cf190) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
+  - [**BREAKING CHANGE**] Add unsafe-mode and make default execution mode safe-mode (981c3cf,4ce68cd) by Daniel Xu &lt;dxu@dxuuu.xyz&gt;
 
 ### All Changes
 
@@ -42,8 +45,8 @@ and this project adheres to
   - Add BPFTRACE_MAX_PROBES environment variable (ddb79df) by Matheus Marchini &lt;mat@mmarchini.me&gt;
   - Add option to redirect trace output to file (462a811) by bas smit &lt;bas@baslab.org&gt;
   - Add script to check kernel requirements (ac19743) by bas smit &lt;bas@baslab.org&gt;
-  - Add USDT wildcard matching support (82dbe4e...3725edf) by Dale Hamel &lt;dale.hamel@srvthe.net&gt;
-  - Add support for arrays and IPv6 for the `ntop` builtin function (c9dd10f) by Matheus Marchini &lt;mat@mmarchini.me&gt;
+  - Add USDT wildcard matching support (82dbe4e...3725edf,648a65a) by Dale Hamel &lt;dale.hamel@srvthe.net&gt;
+  - Add support for arrays and IPv6 for the `ntop` builtin function (c9dd10f,24a463f) by Matheus Marchini &lt;mat@mmarchini.me&gt;
   - Add 'cat' builtin (#543) (ae1cfc9,ef9baf8) by Augusto Caringi &lt;acaringi@redhat.com&gt;
   - Add array indexing operator [] for one-dimensional, constant arrays (ec664a1) by Dale Hamel &lt;dalehamel@users.noreply.github.com&gt;
   - Allow dots to truncate fields in `printf` (0f636c9) by Brendan Gregg &lt;bgregg@netflix.com&gt;
@@ -52,6 +55,7 @@ and this project adheres to
   - Add basic support to enums (treat them as constants) (e4cb6ce) by Matheus Marchini &lt;mat@mmarchini.me&gt;
   - Add macro definition support (8826470,af67b56,14e892b) by Matheus Marchini &lt;mat@mmarchini.me&gt;, Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
   - Add hardware:branch-misses (9631623) by Jason Koch &lt;jkoch@netflix.com&gt;
+  - Allow comparison of two string variables (7c8e8ed) by williangaspar &lt;williangaspar360@gmail.com&gt;
 
 #### Changed
 
@@ -64,7 +68,7 @@ and this project adheres to
   - Restore map key validation (7826ee3) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
   - Add `/usr/include` to default header search path (32dd14b) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
   - More information in error message when failing to open script file (3b06e5f) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
-  - Add unsafe-mode and make default execution mode safe-mode (981c3cf,4ce68cd) by Daniel Xu &lt;dxu@dxuuu.xyz&gt;
+  - [**BREAKING CHANGE**] Add unsafe-mode and make default execution mode safe-mode (981c3cf,4ce68cd) by Daniel Xu &lt;dxu@dxuuu.xyz&gt;
   - Safety measure for LLVM out of memory issue (6b53e4a) by Brendan Gregg &lt;bgregg@netflix.com&gt;
   - Allow non-zero lhist min value (51fdb6a) by bas smit &lt;bas@baslab.org&gt;
   - Improvements in startup speed (5ed8717,1ffb50f) by Matheus Marchini &lt;mat@mmarchini.me&gt;
@@ -75,59 +79,52 @@ and this project adheres to
   - Add hint when traced PID is not running (9edb3e1) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
   - Allow pointers in printf, mapkeys, and filters (0202412,280f1c6) by Brendan Gregg &lt;bgregg@netflix.com&gt;
   - Allow ksym() lookups on function pointers (2139d46) by Brendan Gregg &lt;bgregg@netflix.com&gt;
+  - [**BREAKING CHANGE**] Ban kprobes that cause CPU deadlocks (40cf190) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
 
 #### Fixed
 
-  - clang_parser: workaround for asm goto in Kernel 5+ headers (60263e1) by Matheus Marchini &lt;mat@mmarchini.me&gt;
-  - codegen: fix ntop usage with maps and printf (24a463f) by Matheus Marchini &lt;mat@mmarchini.me&gt;
-  - Fix attaching to USDT probes with semaphore and USDT runtime tests (648a65a) by Dale Hamel &lt;dale.hamel@srvthe.net&gt;
-  - Fix error handling of invalid 'args' utilization (#698) (13c2e2e) by Augusto Caringi &lt;acaringi@redhat.com&gt;
+  - Workaround for asm goto in Kernel 5+ headers (60263e1) by Matheus Marchini &lt;mat@mmarchini.me&gt;
+  - Properly handle invalid `args` utilization (13c2e2e) by Augusto Caringi &lt;acaringi@redhat.com&gt;
   - Fix abort caused by lhist with incorrect number of arguments (41036b9) by bas smit &lt;bas@baslab.org&gt;
-  - Fix finalization through exit() builtin under heavy load (#705) (5cce746) by Augusto Caringi &lt;acaringi@redhat.com&gt;
   - Fix anonymous struct parsing (ea63e8b) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
-  - Fix code generation for bitwise and logical not on integer values (#700) (f522296) by synth0 &lt;synthkaf@outlook.com&gt;
+  - Fix code generation for bitwise and logical not on integer values (f522296) by synth0 &lt;synthkaf@outlook.com&gt;
   - Fix typo in type mismatch error message (83924f8) by Jay Kamat &lt;jaygkamat@gmail.com&gt;
-  - Fix logic of finalization through exit() call (#228) (e4c418e) by Augusto Caringi &lt;acaringi@redhat.com&gt;
   - Fix clearing action for some aggregations (dcd657e) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
-  - Fix possible crash if an invalid char is used in search (#664) (c4c6894) by Augusto Caringi &lt;acaringi@redhat.com&gt;
+  - Fix possible crash if an invalid char is used in search (c4c6894) by Augusto Caringi &lt;acaringi@redhat.com&gt;
   - Fix headers includes by using -isystem rather than -I (32daaa2) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
-  - Fix exit() function bypassing END probe processing #228 (f63e1df) by Augusto Caringi &lt;acaringi@redhat.com&gt;
+  - Fix exit() function bypassing END probe processing #228 (f63e1df,e4c418e,5cce746) by Augusto Caringi &lt;acaringi@redhat.com&gt;
   - Fix order in which probes fire (a4bf870) by John Gallagher &lt;john.gallagher@delphix.com&gt;
-  - Stop throwing 'failed to initialize usdt context for path' error msg (#621) (1fa3d3c) by Augusto Caringi &lt;acaringi@redhat.com&gt;
-  - [ntop] fix stringification of ntop keys in maps (598050e) by Matheus Marchini &lt;mat@mmarchini.me&gt;
-  - [clang] Fix parsing of forward-decl structs inside structs (354c919) by Matheus Marchini &lt;mat@mmarchini.me&gt;
-  - [clang_parser] fix struct definition from headers (4564d55) by Matheus Marchini &lt;mat@mmarchini.me&gt;
+  - Stop throwing 'failed to initialize usdt context for path' error message (1fa3d3c) by Augusto Caringi &lt;acaringi@redhat.com&gt;
+  - Fix stringification of ntop keys in maps (598050e) by Matheus Marchini &lt;mat@mmarchini.me&gt;
+  - Fix parsing of forward-decl structs inside structs (354c919) by Matheus Marchini &lt;mat@mmarchini.me&gt;
+  - Fix struct definition from headers (4564d55) by Matheus Marchini &lt;mat@mmarchini.me&gt;
   - Avoid crash if incorrect command line option is used (aa24f29) by Augusto Caringi &lt;acaringi@redhat.com&gt;
-  - [clang_parser] fix clang_parser for LLVM 8+ (80ce138) by Matheus Marchini &lt;mat@mmarchini.me&gt;
-  - [parser] fix semicolon after if statements (13de974) by Matheus Marchini &lt;mat@mmarchini.me&gt;
-  - Ban kprobes that cause CPU deadlocks (40cf190) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
-  - Throw error msg if argN or retval is used with incorrect probe type (#522) (b40354c) by Augusto Caringi &lt;acaringi@redhat.com&gt;
-  - string positional parameter in comparison failure (7c8e8ed) by williangaspar &lt;williangaspar360@gmail.com&gt;
-  - usdt: fix listing (af01fac) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
-  - Misc readability fixes (9581e01) by Fangrui Song &lt;i@maskray.me&gt;
+  - Fix clang_parser for LLVM 8+ (80ce138) by Matheus Marchini &lt;mat@mmarchini.me&gt;
+  - Fix semicolon being required in some cases after if statements (13de974) by Matheus Marchini &lt;mat@mmarchini.me&gt;
+  - Throw error message if argN or retval is used with incorrect probe type (b40354c) by Augusto Caringi &lt;acaringi@redhat.com&gt;
+  - Fix USDT listing (`-l`) without a search pattern (af01fac) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
   - Add missing space to error message (e1f5f14) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
-  - codegen: don't rely on LLVM unrolling our loops (702145c) by Matheus Marchini &lt;mat@mmarchini.me&gt;
+  - Fix unroll in some cases (mostly when the generated code was large) (702145c) by Matheus Marchini &lt;mat@mmarchini.me&gt;
 
 #### Documentation
 
-  - added info on clang environment variables (7676530) by Richard Elling &lt;Richard.Elling@RichardElling.com&gt;
+  - Added info on clang environment variables (7676530) by Richard Elling &lt;Richard.Elling@RichardElling.com&gt;
   - Fix snap instructions. (3877e46) by George Slavin &lt;george.r.slavin@gmail.com&gt;
-  - Fix up ustack documentation (5eeeb10) by Daniel Xu &lt;dxu@dxuuu.xyz&gt;
-  - doc: stack => kstack (49e01e0) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
-  - Reference guide: Fix table of contents array access hyperlink (05eb170) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
-  - Fix broken ksym link in reference guide (845f9b6) by Daniel Xu &lt;dxu@dxuuu.xyz&gt;
-  - Fix broken links in docs (c215c61) by Daniel Xu &lt;dxu@dxuuu.xyz&gt;
+  - Fix ustack documentation (5eeeb10) by Daniel Xu &lt;dxu@dxuuu.xyz&gt;
+  - Replace stack with kstack (49e01e0) by Javier Honduvilla Coto &lt;javierhonduco@gmail.com&gt;
+  - Fix TOC in the reference guide (05eb170) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
+  - Fix broken links in docs (c215c61,845f9b6) by Daniel Xu &lt;dxu@dxuuu.xyz&gt;
   - Fix inaccurate tutorial on listing (a4aeaa5) by Daniel Xu &lt;dxu@dxuuu.xyz&gt;
   - Add documentation for BEGIN/END probes (81de93a) by Daniel Xu &lt;dxu@dxuuu.xyz&gt;
-  - Update build instructions for ubuntu (38b9620) by bas smit &lt;bas@baslab.org&gt;
+  - Update build instructions for Ubuntu (38b9620) by bas smit &lt;bas@baslab.org&gt;
   - INSTALL.md: update required dependency for usdt (5fc438e) by Zi Shen Lim &lt;zlim.lnx@gmail.com&gt;
-* - docs: fix ++ and -- text wrt undefined vars (47ab5cd) by Matheus Marchini &lt;mat@mmarchini.me&gt;
+  - Fix ++ and -- text on undefined variables (47ab5cd) by Matheus Marchini &lt;mat@mmarchini.me&gt;
   - Reference guide small fixes (0d9c1a4) by Augusto Caringi &lt;acaringi@redhat.com&gt;
-  - INSTALL.md: Add instructions to install on Gentoo (3c23187) by Patrick McLean &lt;chutzpah@gentoo.org&gt;
+  - Add instructions to install on Gentoo (3c23187) by Patrick McLean &lt;chutzpah@gentoo.org&gt;
   - Add install instructions for Ubuntu snap package (0982bb6) by George Slavin &lt;george.r.slavin@gmail.com&gt;
   - Fix spelling mistake (a45869f) by George Slavin &lt;george.r.slavin@gmail.com&gt;
   - Fix 'one liners tutorial': use 'openat' instead of 'open' in examples (0cce55c) by Augusto Caringi &lt;acaringi@redhat.com&gt;
-  - README: Add contributing section (2a08468) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
+  - Add contributing section to the README (2a08468) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
   - Standardise documentation on the bpftrace name (135a4d3) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
   - Update install instructions (505b50a) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
 
@@ -171,6 +168,7 @@ and this project adheres to
   - [tests] allow tests to be skipped if a given condition is not met (59fa32a) by Matheus Marchini &lt;mat@mmarchini.me&gt;
   - [tests] make other.if_compare_and_print_string less flaky (840bbb3) by Matheus Marchini &lt;mat@mmarchini.me&gt;
   - Fix compile warnings and mark more functions as const (cfb058d) by Alastair Robertson &lt;alastair@ajor.co.uk&gt;
+  - Misc readability fixes (9581e01) by Fangrui Song &lt;i@maskray.me&gt;
   - build: unify dockerfiles under a bionic image (445fb61) by Matheus Marchini &lt;mat@mmarchini.me&gt;
   - [tests] fix and enhance runtime tests (ea5deb9) by Matheus Marchini &lt;mat@mmarchini.me&gt;
   - [tests] add test script to run tools with -d (4ff113d) by Matheus Marchini &lt;mat@mmarchini.me&gt;
